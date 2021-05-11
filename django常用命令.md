@@ -12,4 +12,6 @@ python manage.py runserver
 python manage.py createsuperuser
 ```
 #### 账号密码
-jenny 123
+jenny 123  
+#### 教程地址
+https://www.dusaiphoto.com/article/20/  

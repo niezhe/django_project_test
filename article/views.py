@@ -51,9 +51,7 @@ def article_create(request):
             # 将文章保存到数据库中
             new_article.save()
             # 完成返回到文章列表
-            print('返回值之前')
             return redirect('article:article_list')
-            print('返回值之后')
         # 如果数据不合法，返回错误信息
         else:
             return HttpResponse('表单内容有误，请重新填写。')
@@ -65,3 +63,11 @@ def article_create(request):
         context = {'article_post_form': article_post_form}
         # 返回模板
         return render(request, 'article/create.html', context)
+#删除文章
+def article_delete(request,id):
+    #根据id获取需要删除的文章
+    article = ArticlePost.objects.get(id=id)
+    #调用。delete()方法删除文章
+    article.delete()
+    # 完成删除后返回文章列表
+    return redirect('article:article_list')

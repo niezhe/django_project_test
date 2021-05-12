@@ -23,7 +23,8 @@
     {% include 'footer.html' %}
     <!-- bootstrap.js 依赖 jquery.js 和popper.js，因此在这里引入 -->
     <script src="{% static 'jquery/jquery.js' %}"></script>
-
+    <!-- 引入layer.js -->
+    <script src="{% static 'layer/layer.js' %}"></script>
     <!--
         popper.js 采用 cdn 远程引入，意思是你不需要把它下载到本地。
         在实际的开发中推荐静态文件尽量都使用 cdn 的形式。

@@ -10,6 +10,9 @@ python manage.py runserver
 
 #创建管理员账号
 python manage.py createsuperuser
+
+# 创建APP
+python manage.py startapp userprofile
 ```
 #### 账号密码
 jenny 123  

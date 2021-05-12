@@ -20,4 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     #配置APP的url
     path('article/',include('article.urls',namespace = 'article')),
+    # 用户登录
+    path('userprofile/',include('userprofile.urls',namespace='userprofile')),
 ]

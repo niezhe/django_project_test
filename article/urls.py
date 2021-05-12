@@ -16,4 +16,5 @@ urlpatterns = [
     path('article-create/',views.article_create,name='article_create'),
     path('article-delete/<int:id>/',views.article_delete,name='article_delete'),
     path('alticle-safe-delete/<int:id>/',views.article_safe_delete,name='article_safe_delete'),
+    path('alticle-update/<int:id>/',views.artcle_update,name='article_update'),
 ]

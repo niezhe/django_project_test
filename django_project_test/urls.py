@@ -18,8 +18,10 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #配置APP的url
+    # 配置APP的url
     path('article/',include('article.urls',namespace = 'article')),
     # 用户登录
     path('userprofile/',include('userprofile.urls',namespace='userprofile')),
+    # 重置密码
+    path('password-reset/',include('password_reset.urls')),
 ]

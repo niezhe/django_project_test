@@ -14,14 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # 配置APP的url
-    path('article/',include('article.urls',namespace = 'article')),
+    path('article/', include('article.urls', namespace='article')),
     # 用户登录
-    path('userprofile/',include('userprofile.urls',namespace='userprofile')),
+    path('userprofile/', include('userprofile.urls', namespace='userprofile')),
     # 重置密码
-    path('password-reset/',include('password_reset.urls')),
+    path('password-reset/', include('password_reset.urls')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

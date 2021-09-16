@@ -141,4 +141,4 @@ EMAIL_HOST_PASSWORD = 'RSTRMASRIMLRBHKV'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # 媒体文件地址
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, '/media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

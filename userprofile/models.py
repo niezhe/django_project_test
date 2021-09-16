@@ -18,17 +18,19 @@ class Profile(models.Model):
     bio = models.TextField(max_length=500, blank=True)
 
     def __str__(self):
-        return 'user{}'.format(self.user.username)
+        return 'user {}'.format(self.user.username)
 
-
+"""
+在后台中创建并保存User时调用了信号接收函数，创建了Profile表；但如果此时管理员填写了内联的Profile表，会导致此表也会被创建并保存。最终结果就是同时创建了两个具有相同User的Profile表，违背了”一对一“外键的原则。
+"""
 # 信息接收函数，每当新建User实例时自动调用
-@receiver(post_save, sender=User)
-def cretae_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
+# @receiver(post_save, sender=User)
+# def cretae_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         Profile.objects.create(user=instance)
 
 
 # 信号接收函数，每当更新User实例自动调用
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+# @receiver(post_save, sender=User)
+# def save_user_profile(sender, instance, **kwargs):
+#     instance.profile.save()

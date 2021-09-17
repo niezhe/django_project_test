@@ -16,8 +16,14 @@ from django.core.paginator import Paginator
 # 视图函数
 def article_list(request):
     # 修改变量名称（articles -> article_list）
-    article_list = ArticlePost.objects.all()
-
+    # 根据GET请求中查询条件
+    # 返回不同排序的对象数组
+    if request.GET.get('order') == 'total_views':
+        article_list = ArticlePost.objects.order_by('-total_views')
+        order = 'total_views'
+    else:
+        article_list = ArticlePost.objects.all()
+        order = 'normal'
     # 每页显示1编文章
     paginator = Paginator(article_list, 3)
     # 获取url中的页码
@@ -26,7 +32,8 @@ def article_list(request):
     articles = paginator.get_page(page)
 
     # 需要传递给模板（templates）的对象
-    context = {'articles': articles}
+    # context = {'articles': articles}
+    context = {'articles': articles, 'order': order}
     # render函数：载入模板，并返回context对象
     return render(request, 'article/list.html', context)
 
@@ -82,9 +89,14 @@ def article_create(request):
 
 
 # 删除文章
+@login_required(login_url='/userprofile/login/')
 def article_delete(request, id):
     # 根据id获取需要删除的文章
     article = ArticlePost.objects.get(id=id)
+
+    if request.user != article.author:
+        return HttpResponse("抱歉，你无权修改这篇文章。")
+
     # 调用。delete()方法删除文章
     article.delete()
     # 完成删除后返回文章列表
@@ -92,7 +104,11 @@ def article_delete(request, id):
 
 
 # 安全删除文章
+@login_required(login_url='/userprofile/login/')
 def article_safe_delete(request, id):
+    article = ArticlePost.objects.get(id=id)
+    if request.user != article.author:
+        return HttpResponse("抱歉，你无权修改这篇文章。")
     if request.method == 'POST':
         article = ArticlePost.objects.get(id=id)
         article.delete()

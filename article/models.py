@@ -20,6 +20,8 @@ class ArticlePost(models.Model):
     # 文章更新时间
     updated = models.DateTimeField(auto_now=True)
 
+    total_views = models.PositiveIntegerField(default=0)
+
     class Meta:
         # ordering 指定模型返回的数据的排列顺序
         # '-created' 表明数据应该以倒序排列

@@ -35,6 +35,10 @@ def article_list(request):
 def article_detail(request, id):
     # 取出响应文章
     article = ArticlePost.objects.get(id=id)
+    # 浏览量+1
+    article.total_views += 1
+    article.save(update_fields=['total_views'])
+
     # 将markdown语法渲染成html样式
     article.body = markdown.markdown(article.body, extensions=[  # 包含 缩写、表格等常用扩展
         'markdown.extensions.extra',
@@ -98,7 +102,9 @@ def article_safe_delete(request, id):
 
 
 # 更新文章
-def artcle_update(request, id):
+# 提醒用户登录
+@login_required(login_url='/userprofile/login/')
+def article_update(request, id):
     """
     更新文章的视图函数
     通过POST方法提交表单，更新titile、body字段
@@ -107,6 +113,9 @@ def artcle_update(request, id):
     """
     # 获取修改的具体文章对象
     article = ArticlePost.objects.get(id=id)
+    # 过滤非作者的用户
+    if request.user != article.author:
+        return HttpResponse("抱歉，你无权修改这篇文章。")
     # 判断用户是否为POST提交表单
     if request.method == 'POST':
         # 将提交的数据赋值到表单实例

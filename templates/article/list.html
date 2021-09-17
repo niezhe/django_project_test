@@ -30,6 +30,12 @@
 {#                            <a href="#" class="btn btn-primary">阅读本文</a>#}
 {#                            实现跳转#}
                             <a href="{% url 'article:article_detail' article.id %}" class="btn btn-primary">阅读本文</a>
+                            <!-- 显示浏览量 -->
+                            <span>
+                                <small class="col align-self-end" style="color: gray;">
+                                    浏览: {{ article.total_views }}
+                                </small>
+                            </span>
                         </div>
                     </div>
                 </div>

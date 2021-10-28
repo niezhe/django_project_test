@@ -11,15 +11,20 @@
 {% block content %}
 
     <!-- 文章详情 -->
-    <div class="container">
-        <div class="row">
-            <!-- 标题及作者 -->
-            <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
-            <div class="col-12 alert alert-success">作者：{{ article.author }}
+<div class="container">
+    <div class="row">
+        <!-- 标题及作者 -->
+        <div class="col-9">
+        <!-- 标题及作者 -->
+            <h1 class="mt-4 mb-4">{{ article.title }}</h1>
+            <div class="alert alert-success">
+        {#            <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>#}
+        {#            <div class="col-12 alert alert-success">#}
+                作者：{{ article.author }}
                 {% if user == article.author %}
-{#                · <a href="#" onclick="confirm_delete()">删除文章</a>#}
-                · <a href="#" onclick="confirm_safe_delete()">删除文章</a>
-                · <a href="{% url "article:article_update" article.id %}">编辑文章</a>
+                    {#                · <a href="#" onclick="confirm_delete()">删除文章</a>#}
+                    · <a href="#" onclick="confirm_safe_delete()">删除文章</a>
+                    · <a href="{% url "article:article_update" article.id %}">编辑文章</a>
                 {% endif %}
                 <!-- 新增一个隐藏的表单 -->
                 <form
@@ -32,14 +37,24 @@
                     <button type="submit">发送</button>
                 </form>
             </div>
+
             <!-- 文章正文 -->
             <div class="col-12">
-{#                # 在 article.body 后加上 |safe 过滤器#}
+                {#                # 在 article.body 后加上 |safe 过滤器#}
                 <p>{{ article.body|safe}}</p>
             </div>
         </div>
-    </div>
 
+        <!-- 新增的目录 -->
+        <div class="col-3 mt-4">
+            <h4><strong>目录</strong></h4>
+            <hr>
+            <div>
+                {{ toc|safe }}
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     // 删除文章的函数

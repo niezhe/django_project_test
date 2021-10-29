@@ -1,6 +1,7 @@
 ```shell
 #对模型（models）的创建新的迁移表
 python manage.py makemigrations
+python manage.py makemigrations app_name
 
 #应用迁入到数据库文件中
 python manage.py migrate

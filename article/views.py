@@ -13,6 +13,7 @@ import markdown
 from django.core.paginator import Paginator
 # 引入Q对象
 from django.db.models import Q
+from comment.models import Comment
 
 
 # 视图函数
@@ -76,6 +77,8 @@ def article_list(request):
 def article_detail(request, id):
     # 取出响应文章
     article = ArticlePost.objects.get(id=id)
+    # 取出文章评论
+    comments = Comment.objects.filter(article=id)
     # 浏览量+1
     article.total_views += 1
     article.save(update_fields=['total_views'])
@@ -98,7 +101,7 @@ def article_detail(request, id):
     #     # 目录扩展
     #     'markdown.extensions.TOC',
     # ])
-    context = {'article': article, 'toc': md.toc}
+    context = {'article': article, 'toc': md.toc, 'comments': comments}
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
 

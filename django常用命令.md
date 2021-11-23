@@ -16,6 +16,7 @@ python manage.py createsuperuser
 python manage.py startapp userprofile
 ```
 #### 账号密码
-jenny 123  
+admin admin
+jenny jenny123456  
 #### 教程地址
 https://www.dusaiphoto.com/article/20/  

@@ -14,6 +14,7 @@ from django.core.paginator import Paginator
 # 引入Q对象
 from django.db.models import Q
 from comment.models import Comment
+from .models import ArticleColumn
 
 
 # 视图函数
@@ -121,6 +122,8 @@ def article_create(request):
             # 此时请重新创建用户，并传入此用户的id
             # new_article.author = User.objects.get(id=1)
             new_article.author = User.objects.get(id=request.user.id)
+            if request.POST['colum'] != 'none':
+                new_article.column = ArticleColumn.objects.get(id=request.POST['column'])
             # 将文章保存到数据库中
             new_article.save()
             # 完成返回到文章列表
@@ -130,10 +133,11 @@ def article_create(request):
             return HttpResponse('表单内容有误，请重新填写。')
         # 如果用户请求获取数据
     else:
+        columns = ArticleColumn.objects.all()
         # 创建表单类实例
         article_post_form = ArticlePostForm
         # 赋值上下文
-        context = {'article_post_form': article_post_form}
+        context = {'article_post_form': article_post_form, 'columns': columns}
         # 返回模板
         return render(request, 'article/create.html', context)
 
@@ -192,6 +196,10 @@ def article_update(request, id):
             article.title = request.POST['title']
             article.body = request.POST['body']
             article.save()
+            if request.POST['column'] != 'none':
+                article.column = ArticleColumn.objects.get(id=request.POST['column'])
+            else:
+                article.column = None
             # 完成后返回到修改后的文章，需要传入文章id
             return redirect('article:article_detail', id=id)
         # 如果数据不合法，返回错误
@@ -201,5 +209,10 @@ def article_update(request, id):
     else:
         # 创建表单类实例
         article_post_form = ArticlePostForm()
-        context = {'article': article, 'article_post_form': article_post_form}
+        columns = ArticleColumn.objects.all()
+        context = {
+            'article': article,
+            'article_post_form': article_post_form,
+            'columns': columns,
+        }
         return render(request, 'article/update.html', context)

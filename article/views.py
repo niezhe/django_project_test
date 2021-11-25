@@ -122,7 +122,7 @@ def article_create(request):
             # 此时请重新创建用户，并传入此用户的id
             # new_article.author = User.objects.get(id=1)
             new_article.author = User.objects.get(id=request.user.id)
-            if request.POST['colum'] != 'none':
+            if request.POST['column'] != 'none':
                 new_article.column = ArticleColumn.objects.get(id=request.POST['column'])
             # 将文章保存到数据库中
             new_article.save()
@@ -195,11 +195,11 @@ def article_update(request, id):
             # 保存新写入的title,body数据并保存
             article.title = request.POST['title']
             article.body = request.POST['body']
-            article.save()
             if request.POST['column'] != 'none':
                 article.column = ArticleColumn.objects.get(id=request.POST['column'])
             else:
                 article.column = None
+            article.save()
             # 完成后返回到修改后的文章，需要传入文章id
             return redirect('article:article_detail', id=id)
         # 如果数据不合法，返回错误

@@ -19,58 +19,79 @@ from .models import ArticleColumn
 
 # 视图函数
 def article_list(request):
-    # 修改变量名称（articles -> article_list）
-    # 根据GET请求中查询条件
-    # 返回不同排序的对象数组
+    # 从url 中提取查询参数
     search = request.GET.get('search')
     order = request.GET.get('order')
-    # 用户搜索逻辑
+    column = request.GET.get('column')
+    tag = request.GET.get('tag')
+    # 初始化查询集
+    article_list = ArticlePost.objects.all()
+    # 搜索查询集
     if search:
-        if order == 'total_views':
-            # 用Q对象 进行联合搜索
-            article_list = ArticlePost.objects.filter(
-                Q(title__icontains=search) |
-                Q(body__icontains=search)
-            ).order_by('-total_views')
-        else:
-            article_list = ArticlePost.objects.filter(
-                Q(title__icontains=search) |
-                Q(body__icontains=search)
-            )
+        article_list = article_list.filter(Q(title__icontains=search) | Q(body__icontains=search))
     else:
-        # 将search参数重置为空
         search = ''
-        if order == 'total_views':
-            article_list = ArticlePost.objects.all().order_by('-total_views')
-        else:
-            article_list = ArticlePost.objects.all()
-
+    # 栏目查询集
+    if column is not None and column.isdigit():
+        article_list = article_list.filter(column=column)
+    # 标签查询集
+    if tag and tag != 'None':
+        article_list = article_list.filter(tags__name__in=[tag])
+    # 查询集排序
+    if order == 'total_views':
+        article_list = article_list.order_by('-total_views')
     paginator = Paginator(article_list, 3)
     page = request.GET.get('page')
     articles = paginator.get_page(page)
 
-    # 增加search到context
-    context = {'articles': articles, 'order': order, 'search': search}
-
+    # 需要传递给模板（templates)的对象
+    context = {
+        'articles': articles,
+        'order': order,
+        'search': search,
+        'column': column,
+        'tag': tag,
+    }
     return render(request, 'article/list.html', context)
 
-    # if request.GET.get('order') == 'total_views':
-    #     article_list = ArticlePost.objects.order_by('-total_views')
-    #     order = 'total_views'
+    # 修改变量名称（articles -> article_list）
+    # 根据GET请求中查询条件
+    # 返回不同排序的对象数组
+    # search = request.GET.get('search')
+    # order = request.GET.get('order')
+    # # 从url中提取查询参数
+    # column = request.GET.get('column')
+    # tag = request.GET.get('tag')
+    # # 初始化查询集
+    # article_list = ArticlePost.objects.all()
+    # # 用户搜索逻辑
+    # if search:
+    #     if order == 'total_views':
+    #         # 用Q对象 进行联合搜索
+    #         article_list = ArticlePost.objects.filter(
+    #             Q(title__icontains=search) |
+    #             Q(body__icontains=search)
+    #         ).order_by('-total_views')
+    #     else:
+    #         article_list = ArticlePost.objects.filter(
+    #             Q(title__icontains=search) |
+    #             Q(body__icontains=search)
+    #         )
     # else:
-    #     article_list = ArticlePost.objects.all()
-    #     order = 'normal'
-    # # 每页显示1编文章
+    #     # 将search参数重置为空
+    #     search = ''
+    #     if order == 'total_views':
+    #         article_list = ArticlePost.objects.all().order_by('-total_views')
+    #     else:
+    #         article_list = ArticlePost.objects.all()
+    #
     # paginator = Paginator(article_list, 3)
-    # # 获取url中的页码
     # page = request.GET.get('page')
-    # # 将导航的对象相应的页码内容返回给articles
     # articles = paginator.get_page(page)
     #
-    # # 需要传递给模板（templates）的对象
-    # # context = {'articles': articles}
-    # context = {'articles': articles, 'order': order}
-    # # render函数：载入模板，并返回context对象
+    # # 增加search到context
+    # context = {'articles': articles, 'order': order, 'search': search}
+    #
     # return render(request, 'article/list.html', context)
 
 
@@ -126,6 +147,8 @@ def article_create(request):
                 new_article.column = ArticleColumn.objects.get(id=request.POST['column'])
             # 将文章保存到数据库中
             new_article.save()
+            # 保存tags的多对多关系
+            article_post_form.save_m2m()
             # 完成返回到文章列表
             return redirect('article:article_list')
         # 如果数据不合法，返回错误信息

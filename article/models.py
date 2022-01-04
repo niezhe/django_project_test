@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 # timezone处理时间相关的事物
 from django.utils import timezone
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 
 class ArticleColumn(models.Model):
@@ -33,9 +34,9 @@ class ArticlePost(models.Model):
     created = models.DateTimeField(default=timezone.now)
     # 文章更新时间
     updated = models.DateTimeField(auto_now=True)
-
+    # 文章栏目
     total_views = models.PositiveIntegerField(default=0)
-
+    tags = TaggableManager(blank=True)
     # 文章栏目的“一对多”外键
     column = models.ForeignKey(
         ArticleColumn,

@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.urls import reverse
 from taggit.managers import TaggableManager
+from PIL import Image
 
 
 class ArticleColumn(models.Model):
@@ -37,6 +38,8 @@ class ArticlePost(models.Model):
     # 文章栏目
     total_views = models.PositiveIntegerField(default=0)
     tags = TaggableManager(blank=True)
+    # 文章标题图
+    avatar = models.ImageField(upload_to='article/%Y%m%d/', blank=True)
     # 文章栏目的“一对多”外键
     column = models.ForeignKey(
         ArticleColumn,
@@ -60,3 +63,16 @@ class ArticlePost(models.Model):
 
     def get_absolute_url(self):
         return reverse('article:article_detail', args=[self.id])
+
+    def save(self, *args, **kwargs):
+        # 调用原有的save()功能
+        article = super(ArticlePost, self).save(*args, **kwargs)
+        # 固定宽度缩放图片大小
+        if self.avatar and not kwargs.get('update_fields'):
+            image = Image.open(self.avatar)
+            (x, y) = image.size
+            new_x = 400
+            new_y = int(new_x * (y / x))
+            resizd_image = image.resize((new_x, new_y), Image.ANTIALIAS)
+            resizd_image.save(self.avatar.path)
+        return article

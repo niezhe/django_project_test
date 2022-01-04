@@ -134,6 +134,7 @@ def article_create(request):
     if request.method == 'POST':
         # 将提交的数据赋值到表单实例中
         article_post_form = ArticlePostForm(data=request.POST)
+        article_post_form = ArticlePostForm(request.POST, request.FILES)
         # 判断提交的数据是否满足模型的要求
         if article_post_form.is_valid():
             # 保存数据，但是暂时不提交到数据库中

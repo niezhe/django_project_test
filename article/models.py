@@ -73,6 +73,6 @@ class ArticlePost(models.Model):
             (x, y) = image.size
             new_x = 400
             new_y = int(new_x * (y / x))
-            resizd_image = image.resize((new_x, new_y), Image.ANTIALIAS)
-            resizd_image.save(self.avatar.path)
+            resized_image = image.resize((new_x, new_y), Image.ANTIALIAS)
+            resized_image .save(self.avatar.path)
         return article

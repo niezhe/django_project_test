@@ -223,6 +223,9 @@ def article_update(request, id):
                 article.column = ArticleColumn.objects.get(id=request.POST['column'])
             else:
                 article.column = None
+            if request.FILES.get('avatar'):
+                article.avatar = request.FILES.get('avatar')
+            article.tags.set(*request.POST.get('tags').split(','), clear=True)
             article.save()
             # 完成后返回到修改后的文章，需要传入文章id
             return redirect('article:article_detail', id=id)
@@ -238,5 +241,6 @@ def article_update(request, id):
             'article': article,
             'article_post_form': article_post_form,
             'columns': columns,
+            'tags': ','.join([x for x in article.tags.names()]),
         }
         return render(request, 'article/update.html', context)

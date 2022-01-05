@@ -15,6 +15,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from comment.models import Comment
 from .models import ArticleColumn
+from comment.forms import CommentForm
 
 
 # 视图函数
@@ -114,7 +115,8 @@ def article_detail(request, id):
         ]
     )
     article.body = md.convert(article.body)
-
+    # 引入评论表单
+    comment_form = CommentForm()
     # 将markdown语法渲染成html样式
     # article.body = markdown.markdown(article.body, extensions=[  # 包含 缩写、表格等常用扩展
     #     'markdown.extensions.extra',
@@ -123,7 +125,11 @@ def article_detail(request, id):
     #     # 目录扩展
     #     'markdown.extensions.TOC',
     # ])
-    context = {'article': article, 'toc': md.toc, 'comments': comments}
+    context = {'article': article,
+               'toc': md.toc,
+               'comments': comments,
+               'comment_form': comment_form,
+               }
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
 

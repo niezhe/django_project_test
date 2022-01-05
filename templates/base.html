@@ -23,6 +23,7 @@
     {% include 'footer.html' %}
     <!-- bootstrap.js 依赖 jquery.js 和popper.js，因此在这里引入 -->
     <script src="{% static 'jquery/jquery.js' %}"></script>
+    {% block script %}{% endblock script %}
     <!-- 引入layer.js -->
     <script src="{% static 'layer/layer.js' %}"></script>
     <!--

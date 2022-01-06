@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'taggit',
     'ckeditor',
     'mptt',
+    'notifications',
+    'notice',
 ]
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'

@@ -41,7 +41,11 @@ INSTALLED_APPS = [
     'comment',
     'taggit',
     'ckeditor',
+    'mptt',
 ]
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 CKEDITOR_CONFIGS = {
     # django-ckeditor默认使用default配置
     'default': {

@@ -44,7 +44,29 @@ INSTALLED_APPS = [
     'mptt',
     'notifications',
     'notice',
+    # allauth 启动必须项
+    # 'django.contrib.auth',
+    # 'django.contrib.messages',
+    'django.contrib.sites',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    # Django 后台可独立于 allauth 登录
+    'django.contrib.auth.backends.ModelBackend',
+
+    # 配置 allauth 独有的认证方法，如 email 登录
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+# 设置站点
+SITE_ID = 1
+
+# 登录成功后重定向地址
+# LOGIN_REDIRECT_URL = '/article/article-list'
+LOGIN_REDIRECT_URL = '/'
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
@@ -103,6 +125,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # allauth 启动必须项
+                'django.template.context_processors.request',
             ],
         },
     },

@@ -74,5 +74,13 @@ class ArticlePost(models.Model):
             new_x = 400
             new_y = int(new_x * (y / x))
             resized_image = image.resize((new_x, new_y), Image.ANTIALIAS)
-            resized_image .save(self.avatar.path)
+            resized_image.save(self.avatar.path)
         return article
+
+    def was_created_recently(self):
+        # 若文章是最近发表的，则返回True
+        diff = timezone.now() - self.created
+        if diff.days == 0 and 0 <= diff.seconds < 60:
+            return True
+        else:
+            return False
